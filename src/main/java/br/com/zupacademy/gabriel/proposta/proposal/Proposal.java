@@ -1,6 +1,7 @@
 package br.com.zupacademy.gabriel.proposta.proposal;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +35,9 @@ public class Proposal {
 		return id;
 	}
 
+	@Deprecated
+	public Proposal() {
+	}
 	public Proposal(@Document @NotNull String document, @Email @NotBlank String email, @NotBlank String name, @NotBlank String address,
 			@Positive @NotNull BigDecimal salary) {
 				this.document = document;
@@ -42,6 +46,14 @@ public class Proposal {
 				this.address = address;
 				this.salary = salary;
 	
+	}
+
+	public boolean existsProposalforTheSameRequester(ProposalRepository proposalRepository) {
+		Optional<Proposal> proposal = proposalRepository.findByDocument(document);
+		if (proposal.isPresent()) {
+			return true;
+		}
+		return false;
 	}
 
 
