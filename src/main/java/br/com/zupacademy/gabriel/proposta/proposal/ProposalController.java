@@ -1,5 +1,6 @@
 package br.com.zupacademy.gabriel.proposta.proposal;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,21 +12,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.com.zupacademy.gabriel.proposta.proposal.solicitation.CheckSolicitationStatus;
+
 @RestController
 @RequestMapping("/proposals")
 public class ProposalController {
-	
+
 	@Autowired
 	private ProposalRepository proposalRepository;
+	
+	@Autowired
+	private CheckSolicitationStatus checkStatus;
 
 	@PostMapping
-	public ResponseEntity<?> create (@RequestBody @Valid ProposalRequest request, UriComponentsBuilder uriBuilder) {
+	@Transactional
+	public ResponseEntity<?> create(@RequestBody @Valid ProposalRequest request, UriComponentsBuilder uriBuilder) {
 		Proposal proposal = request.toModel();
 		if (proposal.existsProposalforTheSameRequester(proposalRepository)) {
-			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Já existe uma proposta para esse solicitante");
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.body("Já existe uma proposta para esse solicitante");
 		}
 		proposalRepository.save(proposal);
-		return ResponseEntity.created(uriBuilder.path("/proposal/{id}").buildAndExpand(proposal.getId()).toUri()).build();
+		proposal.setProposalStatus(checkStatus.converteResultadoSolicitacaoForProposalStatus(proposal));
+
+		return ResponseEntity.created(uriBuilder.path("/proposal/{id}").buildAndExpand(proposal.getId()).toUri())
+				.build();
 	}
 
 }
