@@ -10,4 +10,6 @@ public interface ProposalRepository extends JpaRepository<Proposal, Long>{
 
 	Optional<Proposal> findByDocument(String document);
 
+	Optional<Proposal> findTop1ByProposalStatusAndCardIsNull(ProposalStatus eligible);
+
 }

@@ -38,5 +38,10 @@ public class ProposalController {
 		return ResponseEntity.created(uriBuilder.path("/proposal/{id}").buildAndExpand(proposal.getId()).toUri())
 				.build();
 	}
+	
 
+//	Atrelar o número do cartão a proposta
+//	Fazer consultas em tempo periodico para o sistema de cartão a fim de obter o número do cartão para propostas com sucesso porém sem cartão associado.
+//	Analisar a api externa
+//	Se resultado api externa for 200 número do cartão deve ser atrelado a proposta
 }

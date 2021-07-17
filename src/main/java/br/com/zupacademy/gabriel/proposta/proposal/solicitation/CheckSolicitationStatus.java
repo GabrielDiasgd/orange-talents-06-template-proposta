@@ -15,7 +15,7 @@ public class CheckSolicitationStatus {
 	
 	public ProposalStatus converteResultadoSolicitacaoForProposalStatus(Proposal proposal) {
 		try {
-			proposalClient.getSolicitationAnalysis(proposal.toSolicitationRequest());
+			proposalClient.getSolicitationAnalysis(new SolicitationRequest(proposal));
 			return ProposalStatus.ELIGIBLE;
 		} catch (FeignException e) {
 			return ProposalStatus.NOT_ELIGIBLE;

@@ -4,6 +4,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import br.com.zupacademy.gabriel.proposta.config.validations.Document;
+import br.com.zupacademy.gabriel.proposta.proposal.Proposal;
 
 public class SolicitationRequest {
 
@@ -16,11 +17,10 @@ public class SolicitationRequest {
 	@Deprecated
 	public SolicitationRequest() {
 	}
-
-	public SolicitationRequest(@Document @NotNull String documento, @NotBlank String nome, String idProposta) {
-		this.documento = documento;
-		this.nome = nome;
-		this.idProposta = idProposta;
+	public SolicitationRequest(Proposal proposal) {
+		this.documento = proposal.getDocument();
+		this.nome = proposal.getName();
+		this.idProposta = proposal.getId().toString();
 	}
 
 	public String getDocumento() {
