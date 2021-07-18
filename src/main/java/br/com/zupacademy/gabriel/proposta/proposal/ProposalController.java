@@ -1,11 +1,15 @@
 package br.com.zupacademy.gabriel.proposta.proposal;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +43,14 @@ public class ProposalController {
 				.build();
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<?> consultProposal (@PathVariable Long id){
+		Optional<Proposal> proposal = proposalRepository.findById(id);
+		if (proposal.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não existe nenhuma proposta com id " + id + " cadastrada");
+		}
+		
+		return ResponseEntity.ok(new ProposalResponse(proposal.get()));
+	}
 
-//	Atrelar o número do cartão a proposta
-//	Fazer consultas em tempo periodico para o sistema de cartão a fim de obter o número do cartão para propostas com sucesso porém sem cartão associado.
-//	Analisar a api externa
-//	Se resultado api externa for 200 número do cartão deve ser atrelado a proposta
 }

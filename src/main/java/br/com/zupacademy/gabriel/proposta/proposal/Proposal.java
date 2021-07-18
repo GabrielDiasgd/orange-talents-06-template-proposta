@@ -65,7 +65,9 @@ public class Proposal {
 	public String getName() {
 		return name;
 	}
-
+	public Card getCard() {
+		return card;
+	}
 	public ProposalStatus getProposalStatus() {
 		return proposalStatus;
 	}

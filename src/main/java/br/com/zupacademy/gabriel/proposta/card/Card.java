@@ -33,7 +33,11 @@ public class Card {
 	@Deprecated	
 	public Card() {
 	}
-	
+
+	public String getId() {
+		return id;
+	}
+
 	public Card(String id, @NotNull LocalDateTime issuedOn, @NotBlank String owner, @Positive BigDecimal limit,
 		 DueDateResponse vencimento, Proposal proposal) {
 		super();
