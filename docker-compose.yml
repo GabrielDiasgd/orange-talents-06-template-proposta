@@ -93,6 +93,19 @@ services:
       KAFKA_HOST: "kafka:29092"
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
 
+  proposta:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    image: gabriel/proposta
+    container_name: proposta
+    ports:
+      - 8082:8080
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/keycloak
+    depends_on:
+      - postgres
+
   jaeger:
     image: jaegertracing/all-in-one
     ports:
