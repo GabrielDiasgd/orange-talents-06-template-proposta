@@ -39,7 +39,7 @@ public class ProposalController {
 		proposalRepository.save(proposal);
 		proposal.setProposalStatus(checkStatus.converteResultadoSolicitacaoForProposalStatus(proposal));
 
-		return ResponseEntity.created(uriBuilder.path("/proposal/{id}").buildAndExpand(proposal.getId()).toUri())
+		return ResponseEntity.created(uriBuilder.path("/proposals/{id}").buildAndExpand(proposal.getId()).toUri())
 				.build();
 	}
 	
