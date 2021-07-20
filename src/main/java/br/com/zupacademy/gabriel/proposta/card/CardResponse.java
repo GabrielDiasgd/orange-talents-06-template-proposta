@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import br.com.zupacademy.gabriel.proposta.card.duedate.DueDateResponse;
 import br.com.zupacademy.gabriel.proposta.proposal.Proposal;
 
 public class CardResponse {

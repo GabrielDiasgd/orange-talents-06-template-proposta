@@ -1,4 +1,4 @@
-package br.com.zupacademy.gabriel.proposta.card;
+package br.com.zupacademy.gabriel.proposta.card.duedate;
 
 import java.time.LocalDateTime;
 
@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import br.com.zupacademy.gabriel.proposta.card.Card;
 
 @Entity
 public class DueDate {
