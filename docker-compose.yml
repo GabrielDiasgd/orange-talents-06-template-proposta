@@ -33,7 +33,18 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: keycloak
       POSTGRES_HOST: postgres
-
+      
+  mysql:
+    image: mysql:8.0
+    restart: always
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: proposta
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3366:3306"
+      
   keycloak:
     image: jboss/keycloak
     ports:
@@ -102,9 +113,9 @@ services:
     ports:
       - 8082:8080
     environment:
-      DATABASE_URL: jdbc:postgresql://postgres:5432/keycloak
+      DATABASE_URL: jdbc:mysql://localhost:3366/proposta
     depends_on:
-      - postgres
+      - mysql
 
   jaeger:
     image: jaegertracing/all-in-one
@@ -151,3 +162,4 @@ volumes:
   grafana-volume:
   prometheus-volume:
   postgres-volume:
+  mysql-volume:
