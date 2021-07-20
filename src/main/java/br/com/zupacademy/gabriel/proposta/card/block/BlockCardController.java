@@ -41,7 +41,6 @@ public class BlockCardController {
 		
 		Response resp = cardClient.notifyCardBlock(cardNumber, Map.of("sistemaResponsavel:", "Proposal Microservice - Gabriel"));
 			if (resp.status() == 200) {
-				System.out.println(resp.body());
 				card.get().BlockCard(request);
 				cardRepository.save(card.get());
 				return ResponseEntity.ok().build();
