@@ -25,6 +25,8 @@ import br.com.zupacademy.gabriel.proposta.card.block.Block;
 import br.com.zupacademy.gabriel.proposta.card.duedate.DueDate;
 import br.com.zupacademy.gabriel.proposta.card.duedate.DueDateResponse;
 import br.com.zupacademy.gabriel.proposta.proposal.Proposal;
+import br.com.zupacademy.gabriel.proposta.travel.NotifyTravel;
+import br.com.zupacademy.gabriel.proposta.travel.NotifyTravelRequest;
 
 @Entity
 public class Card {
@@ -55,6 +57,9 @@ public class Card {
 	
 	@OneToMany(mappedBy = "card", cascade = CascadeType.MERGE)
 	private List<Block> blocks = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "card", cascade = CascadeType.MERGE)
+	private List<NotifyTravel> notifications = new ArrayList<>();
 
 	@Deprecated	
 	public Card() {
@@ -82,6 +87,11 @@ public class Card {
 	public void BlockCard(HttpServletRequest request) {
 		this.cardStatus = CardStatus.BLOCKED;
 		this.blocks.add(new Block(request.getRemoteAddr(), request.getHeader("User-Agent"), this));
+	}
+
+	public void notifyTravel(NotifyTravelRequest request, HttpServletRequest servletRequest) {
+		this.notifications.add(new NotifyTravel(request.getDestiny(), request.getTravelEndDate(),
+				servletRequest.getRemoteAddr(), servletRequest.getHeader("User-Agent"), this));
 	}
 
 }
