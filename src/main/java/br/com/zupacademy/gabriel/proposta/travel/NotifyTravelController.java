@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.zupacademy.gabriel.proposta.card.Card;
+import br.com.zupacademy.gabriel.proposta.card.CardClient;
 import br.com.zupacademy.gabriel.proposta.card.CardRepository;
+import feign.FeignException.FeignClientException;
 
 @RestController
 @RequestMapping("/cards")
@@ -24,6 +26,8 @@ public class NotifyTravelController {
 	
 	@Autowired
 	private CardRepository cardRepository;
+	@Autowired
+	private CardClient cardClient;
 	
 	@Transactional
 	@PostMapping("/{cardNumber}/notifications")
@@ -33,11 +37,14 @@ public class NotifyTravelController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não existe nenhum cartão de número " + cardNumber + " cadastrado");
 		}
 		
-		card.get().notifyTravel(request,servletRequest);
-		cardRepository.save(card.get());
-		return ResponseEntity.ok().build();
-		
-		//externalTravelNotificationRequest
+		try {
+			cardClient.notify(cardNumber, request.toExternalRequest());
+			card.get().notifyTravel(request,servletRequest);
+			cardRepository.save(card.get());
+			return ResponseEntity.ok().build();
+		} catch (FeignClientException e) {
+			return ResponseEntity.status(e.status()).body("Não foi possível notificar o sistema do banco. Tente novamente mais tarde!");
+		}
 	}
 
 }

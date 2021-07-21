@@ -9,6 +9,8 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
+import br.com.zupacademy.gabriel.proposta.card.ExternalTravelNotificationRequest;
+
 public class NotifyTravelRequest {
 	
 	@NotBlank
@@ -31,5 +33,10 @@ public class NotifyTravelRequest {
 
 	public LocalDate getTravelEndDate() {
 		return travelEndDate;
+	}
+	
+	
+	public ExternalTravelNotificationRequest toExternalRequest () {
+		return new ExternalTravelNotificationRequest(this.destiny, this.travelEndDate);
 	}
 }

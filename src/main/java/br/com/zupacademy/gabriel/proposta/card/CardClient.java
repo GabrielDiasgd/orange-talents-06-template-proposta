@@ -17,4 +17,7 @@ public interface CardClient {
 
 	@PostMapping("/{cardNumber}/bloqueios")
 	public Response notifyCardBlock(@PathVariable String cardNumber, @RequestBody Map<String, String> request);
+	
+	@PostMapping("/{cardNumber}/avisos")
+	public String notify (@PathVariable String cardNumber, @RequestBody ExternalTravelNotificationRequest request);
 }
