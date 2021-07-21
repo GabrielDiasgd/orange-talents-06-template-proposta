@@ -27,6 +27,8 @@ import br.com.zupacademy.gabriel.proposta.card.duedate.DueDateResponse;
 import br.com.zupacademy.gabriel.proposta.proposal.Proposal;
 import br.com.zupacademy.gabriel.proposta.travel.NotifyTravel;
 import br.com.zupacademy.gabriel.proposta.travel.NotifyTravelRequest;
+import br.com.zupacademy.gabriel.proposta.wallet.Wallet;
+import br.com.zupacademy.gabriel.proposta.wallet.WalletName;
 
 @Entity
 public class Card {
@@ -60,6 +62,9 @@ public class Card {
 	
 	@OneToMany(mappedBy = "card", cascade = CascadeType.MERGE)
 	private List<NotifyTravel> notifications = new ArrayList<>();
+	
+	@OneToMany(mappedBy = "card", cascade = CascadeType.MERGE)
+	private Set<Wallet> wallets = new HashSet<>();
 
 	@Deprecated	
 	public Card() {
@@ -92,6 +97,10 @@ public class Card {
 	public void notifyTravel(NotifyTravelRequest request, HttpServletRequest servletRequest) {
 		this.notifications.add(new NotifyTravel(request.getDestiny(), request.getTravelEndDate(),
 				servletRequest.getRemoteAddr(), servletRequest.getHeader("User-Agent"), this));
+	}
+
+	public boolean cardAlreadyHasTheSameTypeOfWallet(WalletName walletName) {
+		return this.wallets.stream().anyMatch(wallet -> wallet.getWalletName().equals(walletName));
 	}
 
 }

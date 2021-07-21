@@ -9,8 +9,6 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 
-import br.com.zupacademy.gabriel.proposta.card.ExternalTravelNotificationRequest;
-
 public class NotifyTravelRequest {
 	
 	@NotBlank

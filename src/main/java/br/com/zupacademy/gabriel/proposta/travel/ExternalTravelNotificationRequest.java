@@ -1,4 +1,4 @@
-package br.com.zupacademy.gabriel.proposta.card;
+package br.com.zupacademy.gabriel.proposta.travel;
 
 import java.time.LocalDate;
 
