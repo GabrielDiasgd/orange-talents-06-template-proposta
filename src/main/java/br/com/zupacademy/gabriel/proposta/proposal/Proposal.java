@@ -20,7 +20,6 @@ import org.springframework.util.Assert;
 
 import br.com.zupacademy.gabriel.proposta.card.Card;
 import br.com.zupacademy.gabriel.proposta.card.CardResponse;
-import br.com.zupacademy.gabriel.proposta.config.validations.Document;
 
 @Entity
 public class Proposal {
@@ -28,7 +27,7 @@ public class Proposal {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Document @NotNull
+	@NotNull
 	private String document;
 	@Email @NotBlank
 	private String email;
@@ -46,7 +45,7 @@ public class Proposal {
 	@Deprecated
 	public Proposal() {
 	}
-	public Proposal(@Document @NotNull String document, @Email @NotBlank String email, @NotBlank String name, @NotBlank String address,
+	public Proposal(@NotNull String document, @Email @NotBlank String email, @NotBlank String name, @NotBlank String address,
 			@Positive @NotNull BigDecimal salary) {
 				this.document = document;
 				this.email = email;
@@ -82,8 +81,8 @@ public class Proposal {
 				+ address + ", salary=" + salary + ", proposalStatus=" + proposalStatus + "]";
 	}
 
-	public boolean existsProposalforTheSameRequester(ProposalRepository proposalRepository) {
-		Optional<Proposal> proposal = proposalRepository.findByDocument(document);
+	public boolean existsProposalforTheSameRequester(ProposalRepository proposalRepository, String secret, String salt) {
+		Optional<Proposal> proposal = proposalRepository.findByDocument(this.document);
 		if (proposal.isPresent()) {
 			return true;
 		}

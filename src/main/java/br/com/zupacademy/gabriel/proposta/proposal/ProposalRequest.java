@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import org.springframework.security.crypto.encrypt.Encryptors;
+
 import br.com.zupacademy.gabriel.proposta.config.validations.Document;
 
 public class ProposalRequest {
@@ -21,7 +23,6 @@ public class ProposalRequest {
 	private String address;
 	@Positive @NotNull
 	private BigDecimal salary;
-	
 	
 	public ProposalRequest(@Document @NotNull String document, @Email @NotBlank String email, @NotBlank String name,
 			@NotBlank String address, @Positive @NotNull BigDecimal salary) {
@@ -39,7 +40,8 @@ public class ProposalRequest {
 	}
 
 
-	public Proposal toModel() {
-		return new Proposal(this.document, this.email, this.name, this.address, this.salary);
+	public Proposal toModel(String secret, String salt) {
+		String encryptDocument = Encryptors.queryableText(secret, salt).encrypt(this.document);
+		return new Proposal(encryptDocument, this.email, this.name, this.address, this.salary);
 	}
 }

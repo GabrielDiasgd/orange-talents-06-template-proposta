@@ -6,6 +6,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +25,23 @@ public class ProposalController {
 
 	@Autowired
 	private ProposalRepository proposalRepository;
-	
 	@Autowired
 	private CheckSolicitationStatus checkStatus;
+	@Value("${document.key.secret}")
+	private  String secret;
+	@Value("${document.salt.secret}")
+	private String salt;
+	
 
 	@PostMapping
 	@Transactional
 	public ResponseEntity<?> create(@RequestBody @Valid ProposalRequest request, UriComponentsBuilder uriBuilder) {
-		Proposal proposal = request.toModel();
-		if (proposal.existsProposalforTheSameRequester(proposalRepository)) {
+		Proposal proposal = request.toModel(secret, salt);
+		if (proposal.existsProposalforTheSameRequester(proposalRepository, secret, salt)) {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
 					.body("Já existe uma proposta para esse solicitante");
 		}
+		
 		proposalRepository.save(proposal);
 		proposal.setProposalStatus(checkStatus.converteResultadoSolicitacaoForProposalStatus(proposal));
 
@@ -50,7 +56,7 @@ public class ProposalController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não existe nenhuma proposta com id " + id + " cadastrada");
 		}
 		
-		return ResponseEntity.ok(new ProposalResponse(proposal.get()));
+		return ResponseEntity.ok(new ProposalResponse(proposal.get(), secret, salt));
 	}
 
 }

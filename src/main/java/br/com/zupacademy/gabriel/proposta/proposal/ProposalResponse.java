@@ -1,5 +1,7 @@
 package br.com.zupacademy.gabriel.proposta.proposal;
 
+import org.springframework.security.crypto.encrypt.Encryptors;
+
 public class ProposalResponse {
 
 	private Long id;
@@ -8,9 +10,9 @@ public class ProposalResponse {
 	private ProposalStatus status;
 	private String cardNumber;
 
-	public ProposalResponse(Proposal proposal) {
+	public ProposalResponse(Proposal proposal, String secret, String salt) {
 		this.id = proposal.getId();
-		this.document = proposal.getDocument();
+		this.document = Encryptors.queryableText(secret, salt).decrypt(proposal.getDocument());
 		this.name = proposal.getName();
 		this.status = proposal.getProposalStatus();
 		this.cardNumber = status.equals(ProposalStatus.ELIGIBLE) ? proposal.getCard().getId()
