@@ -21,7 +21,7 @@ import br.com.zupacademy.gabriel.proposta.card.CardRepository;
 import feign.FeignException;
 
 @RestController
-@RequestMapping("/cards/associate-paypal")
+@RequestMapping("/cards")
 public class AssociateWalletController {
 	
 	@Autowired
@@ -31,9 +31,19 @@ public class AssociateWalletController {
 	@Autowired
 	private WalletRepository walletRepository;
 	
+	@PostMapping("/associate-paypal/{cardNumber}/wallets")
+	public ResponseEntity<?> associatePaypal (@PathVariable String cardNumber, @RequestBody @Valid WalletRequest request, UriComponentsBuilder uri){
+		return associateProcess(cardNumber, request, uri);
+	}
+	
+	@PostMapping("/associate-samsung-pay/{cardNumber}/wallets")
+	public ResponseEntity<?> associateSamsungPay (@PathVariable String cardNumber, @RequestBody @Valid WalletRequest request, UriComponentsBuilder uri){
+		return associateProcess(cardNumber, request, uri);
+	}
+
+	
 	@Transactional
-	@PostMapping("/{cardNumber}/wallets")
-	public ResponseEntity<?> associate (@PathVariable String cardNumber, @RequestBody @Valid WalletRequest request, UriComponentsBuilder uri){
+	private ResponseEntity<?> associateProcess(String cardNumber, WalletRequest request, UriComponentsBuilder uri) {
 		Optional<Card> card = cardRepository.findById(cardNumber);
 		if (card.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não exixte nenhum cartão de número " + cardNumber + " cadastrado");
@@ -51,7 +61,6 @@ public class AssociateWalletController {
 		} catch (FeignException e) {
 			return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body("Não foi possível associar a carteira no momento");
 		}
-
 	}
 
 }
